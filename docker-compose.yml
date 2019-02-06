@@ -1,0 +1,47 @@
+php:
+    build: ./php/
+    expose:
+        - 9000
+    ports:
+        - 80:80
+    links:
+        - mysql
+    environment:
+        MYSQL_DB_HOST: mysql
+        MYSQL_DB_USER: trackenv_track
+        MYSQL_DB_PASSWORD: 3On+S[RA,DNb
+    volumes_from:
+        - app
+
+app:
+    image: php:5.6-fpm
+    volumes:
+        - ./app:/var/www/html
+    command: "true"
+
+mysql:
+    build: ./mysql/
+    volumes_from:
+        - data
+    environment:
+        MYSQL_ROOT_PASSWORD: secret
+        MYSQL_DATABASE: trackenv_tracking
+        MYSQL_USER: trackenv_track
+        MYSQL_PASSWORD: 3On+S[RA,DNb
+
+data:
+    image: mysql:latest
+    volumes:
+        - /var/lib/mysql
+    command: "true"
+
+phpadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: trackenv_track
+      PMA_PASSWORD: 3On+S[RA,DNb
